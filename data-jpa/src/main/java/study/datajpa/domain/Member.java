@@ -8,9 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +19,8 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "username", "age"})
-@SQLDelete(sql = "update member set active = false where member_id = ? ")
-@Where(clause = "active = true")
+// @SQLDelete(sql = "update member set active = false where member_id = ? ")
+// @Where(clause = "active = true")
 public class Member {
 
 	@Id
@@ -35,8 +32,8 @@ public class Member {
 
 	private int age;
 
-	@Column(columnDefinition = "boolean default true")
-	private boolean active;
+	// @Column(columnDefinition = "boolean default true")
+	// private boolean active;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "team_id")
@@ -44,6 +41,7 @@ public class Member {
 
 	public Member(String username) {
 		this.username = username;
+		// this.active = true;
 	}
 
 	public Member(String username, int age, Team team) {
