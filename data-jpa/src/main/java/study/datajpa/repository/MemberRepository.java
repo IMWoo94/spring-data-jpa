@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import study.datajpa.domain.Address;
 import study.datajpa.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -19,8 +20,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("select m from Member m where m.username = :username and m.age = :age")
 	List<Member> findUser(@Param("username") String username, @Param("age") int age);
 
-	@Query("select new study.datajpa.domain.Member(m.username) from Member m where m.username = :username and m.age = :age")
-	List<Member> findMember(@Param("username") String username, @Param("age") int age);
+	@Query("select new study.datajpa.repository.MemberDto(m.id, m.username, t.name) from Member m join m.team t where m.username = :username and m.age = :age")
+	List<MemberDto> findMemberDto(@Param("username") String username, @Param("age") int age);
+
+	@Query("select m.address from Member m where m.username = :username")
+	List<Address> findMemberAddress(@Param("username") String username);
+
+	@Query("select m.username from Member m where m.username = :username")
+	List<String> findMemberUsername(@Param("username") String username);
 
 	List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 

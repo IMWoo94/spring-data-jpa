@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import study.datajpa.domain.Address;
 import study.datajpa.domain.Member;
+import study.datajpa.domain.Team;
 
 @SpringBootTest
 @Transactional
@@ -20,6 +22,8 @@ class MemberRepositoryTest {
 
 	@Autowired
 	MemberRepository memberRepository;
+	@Autowired
+	TeamRepository teamRepository;
 	@PersistenceContext
 	EntityManager em;
 
@@ -150,8 +154,32 @@ class MemberRepositoryTest {
 			System.out.println("member.toString() = " + member.toString());
 		}
 
-		List<Member> member = memberRepository.findMember(member1.getUsername(), member1.getAge());
-		for (Member m : member) {
+	}
+
+	@Test
+	void testDtoAndValueAndEmbedded() {
+		Member member1 = new Member("AAA", 10, new Address("서울", "123", "경기"));
+		Member member2 = new Member("AAA", 20, new Address("서울", "123", "경기"));
+
+		Team teamA = new Team("teamA");
+		teamRepository.save(teamA);
+		member1.changeTeam(teamA);
+		member2.changeTeam(teamA);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		List<Address> memberAddress = memberRepository.findMemberAddress("AAA");
+		for (Address address : memberAddress) {
+			System.out.println("address.toString() = " + address.toString());
+		}
+
+		List<String> memberUsername = memberRepository.findMemberUsername("AAA");
+		for (String s : memberUsername) {
+			System.out.println("s = " + s);
+		}
+
+		List<MemberDto> memberDto = memberRepository.findMemberDto(member1.getUsername(), member1.getAge());
+		for (MemberDto m : memberDto) {
 			System.out.println("m.toString() = " + m.toString());
 		}
 

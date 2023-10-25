@@ -1,6 +1,7 @@
 package study.datajpa.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "username", "age"})
+@ToString(of = {"id", "username", "age", "address"})
 // @SQLDelete(sql = "update member set active = false where member_id = ? ")
 // @Where(clause = "active = true")
 @NamedQuery(
@@ -37,6 +38,9 @@ public class Member {
 
 	private int age;
 
+	@Embedded
+	private Address address;
+
 	// @Column(columnDefinition = "boolean default true")
 	// private boolean active;
 
@@ -52,6 +56,12 @@ public class Member {
 	public Member(String username, int age) {
 		this.username = username;
 		this.age = age;
+	}
+
+	public Member(String username, int age, Address address) {
+		this.username = username;
+		this.age = age;
+		this.address = address;
 	}
 
 	public Member(String username, int age, Team team) {
