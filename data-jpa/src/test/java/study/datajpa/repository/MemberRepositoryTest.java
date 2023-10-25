@@ -145,6 +145,16 @@ class MemberRepositoryTest {
 
 		List<Member> result = memberRepository.findByUsername("AAA");
 
+		List<Member> user = memberRepository.findUser(member1.getUsername(), member1.getAge());
+		for (Member member : user) {
+			System.out.println("member.toString() = " + member.toString());
+		}
+
+		List<Member> member = memberRepository.findMember(member1.getUsername(), member1.getAge());
+		for (Member m : member) {
+			System.out.println("m.toString() = " + m.toString());
+		}
+
 	}
 
 }
