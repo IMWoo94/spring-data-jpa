@@ -2,6 +2,7 @@ package study.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -183,6 +184,23 @@ class MemberRepositoryTest {
 			System.out.println("m.toString() = " + m.toString());
 		}
 
+	}
+
+	@Test
+	void paramBindingTest() {
+		Member member1 = new Member("AAA", 10, new Address("서울", "123", "경기"));
+		Member member2 = new Member("AAA", 20, new Address("서울", "123", "경기"));
+
+		Team teamA = new Team("teamA");
+		teamRepository.save(teamA);
+		member1.changeTeam(teamA);
+		member2.changeTeam(teamA);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		memberRepository.findNumberBy(member1.getUsername(), member1.getAge());
+
+		memberRepository.findCollectionBy(Arrays.asList(member1.getUsername(), member2.getUsername()));
 	}
 
 }

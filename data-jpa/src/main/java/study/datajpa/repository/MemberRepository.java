@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,4 +49,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	List<Member> findTop3By();
 
 	List<Member> findDistinctTop3By();
+
+	@Query("select m from Member m where m.username = ?1 and m.age= ?2")
+	List<Member> findNumberBy(String username, int age);
+
+	@Query("select m from Member m where m.username in :names")
+	List<Member> findCollectionBy(@Param("names") Collection<String> names);
+
 }
