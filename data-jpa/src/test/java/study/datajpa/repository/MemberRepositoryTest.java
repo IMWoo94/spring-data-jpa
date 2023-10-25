@@ -87,4 +87,52 @@ class MemberRepositoryTest {
 		}
 	}
 
+	@Test
+	public void findByUsernameAndAgeGreaterThan() {
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("AAA", 20);
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		List<Member> result = memberRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
+
+		assertThat(result.get(0).getUsername()).isEqualTo("AAA");
+		assertThat(result.get(0).getAge()).isEqualTo(20);
+		assertThat(result.size()).isEqualTo(1);
+
+	}
+
+	@Test
+	void queryMethodUseTest() {
+
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("AAA", 20);
+		Member member3 = new Member("AAA", 10);
+		Member member4 = new Member("BBB", 20);
+		Member member5 = new Member("BBB", 10);
+		Member member6 = new Member("BBB", 20);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+		memberRepository.save(member3);
+		memberRepository.save(member4);
+		memberRepository.save(member5);
+		memberRepository.save(member6);
+
+		em.flush();
+		em.clear();
+
+		System.out.println("test ==========================");
+		// memberRepository.countByUsername("AAA");
+		// boolean result = memberRepository.existsByAge(20);
+		// System.out.println("result = " + result);
+		// memberRepository.findMemberDistinctByUsername("AAA");
+		// memberRepository.findDistinctFirstBy();
+		// memberRepository.findFirstBy();
+		// memberRepository.findFirst3By();
+		// memberRepository.findDistinctTop3By();
+		// memberRepository.findTopBy();
+		// memberRepository.findTop3By();
+	}
+
 }
