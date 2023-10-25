@@ -135,4 +135,16 @@ class MemberRepositoryTest {
 		// memberRepository.findTop3By();
 	}
 
+	@Test
+	void testNamedQuery() {
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("AAA", 20);
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		List<Member> result = memberRepository.findByUsername("AAA");
+
+	}
+
 }
