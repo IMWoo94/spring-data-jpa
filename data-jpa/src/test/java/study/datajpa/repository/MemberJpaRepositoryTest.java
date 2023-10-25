@@ -30,6 +30,8 @@ class MemberJpaRepositoryTest {
 
 		assertThat(findMember).isEqualTo(member); // JPA 엔티티 동일성 보장
 
+		memberJpaRepository.delete(findMember);
+
 	}
 
 }
