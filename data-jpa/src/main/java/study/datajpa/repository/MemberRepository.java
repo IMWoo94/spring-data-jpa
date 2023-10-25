@@ -2,6 +2,7 @@ package study.datajpa.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,5 +56,16 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	@Query("select m from Member m where m.username in :names")
 	List<Member> findCollectionBy(@Param("names") Collection<String> names);
+
+	// 반환 타입
+	// 컬렉션, 단건, 옵셔널
+	@Query("select m from Member m where m.username = :username")
+	List<Member> findCollcetionByUsername(@Param("username") String username);
+
+	@Query("select m from Member m where m.username = :username")
+	Member findOneByUsername(@Param("username") String username);
+
+	@Query("select m from Member m where m.username = :username")
+	Optional<Member> findOptionalByUsername(@Param("username") String username);
 
 }

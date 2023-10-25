@@ -4,13 +4,16 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import study.datajpa.domain.Address;
@@ -201,6 +204,49 @@ class MemberRepositoryTest {
 		memberRepository.findNumberBy(member1.getUsername(), member1.getAge());
 
 		memberRepository.findCollectionBy(Arrays.asList(member1.getUsername(), member2.getUsername()));
+	}
+
+	@Test
+	void returnTypeTest() {
+		Member member1 = new Member("AAA", 10, new Address("서울", "123", "경기"));
+		Member member2 = new Member("AAA", 20, new Address("서울", "123", "경기"));
+
+		Team teamA = new Team("teamA");
+		teamRepository.save(teamA);
+		member1.changeTeam(teamA);
+		member2.changeTeam(teamA);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		// collection 으로 반환 시 정보 o
+		List<Member> collcetionByUsername = memberRepository.findCollcetionByUsername(member1.getUsername());
+		System.out.println("collcetionByUsername = " + collcetionByUsername.size());
+
+		// collection 으로 반환 시 정보 x
+		List<Member> collcetionByUsername1 = memberRepository.findCollcetionByUsername("none");
+		System.out.println("collcetionByUsername1 = " + collcetionByUsername1.size());
+
+		// 단건 조회 시
+		// 한건도 없다면 널 리턴 -> 이거는 스프링 데이터 JPA 가 예외를 잡아서 null 로 던저주는 것이다.
+		// 원래는 javax.persistence.NoResultException 예외 발생
+		Member oneByUsername = memberRepository.findOneByUsername("none");
+		System.out.println("oneByUsername = " + oneByUsername);
+
+		// 단건 조회 시 1건 이상인 경우
+		// IncorrectResultSizeDataAccessException
+		// 실제 예외 -> javax.persistence.NonUniqueResultException
+		Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+			memberRepository.findOneByUsername(member1.getUsername());
+		});
+
+		// 옵셔널 단건 조회 시
+		Optional<Member> none = memberRepository.findOptionalByUsername("none");
+		System.out.println("none = " + none);
+
+		// 옵셔널 단건 조회 시 결과 2 건 이상인 경우
+		Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+			memberRepository.findOptionalByUsername(member1.getUsername());
+		});
 	}
 
 }
