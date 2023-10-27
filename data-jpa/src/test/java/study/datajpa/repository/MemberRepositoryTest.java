@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 import study.datajpa.domain.Address;
@@ -247,6 +251,43 @@ class MemberRepositoryTest {
 		Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
 			memberRepository.findOptionalByUsername(member1.getUsername());
 		});
+	}
+
+	@Test
+	void paging() {
+
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member1", 10));
+
+		PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Direction.DESC, "username"));
+		int age = 10;
+
+		// when
+		Page<Member> members = memberRepository.findByAge(age, pageRequest);
+		// Slice<Member> members = memberRepository.findByAge(age, pageRequest);
+		// List<Member> members = memberRepository.findByAge(age, pageRequest);
+
+		Page<MemberDto> toMap = members.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
+
+		// then
+		List<Member> content = members.getContent();
+		for (Member member : members) {
+			System.out.println("member.getUsername() = " + member.getUsername());
+		}
+
+		assertThat(members.get().count()).isEqualTo(3);
+		assertThat(members.getTotalElements()).isEqualTo(6);
+		assertThat(members.getSize()).isEqualTo(3);
+		assertThat(members.getNumber()).isEqualTo(0);
+		assertThat(members.getTotalPages()).isEqualTo(2);
+		assertThat(members.isFirst()).isTrue();
+		assertThat(members.hasNext()).isTrue();
+
 	}
 
 }
