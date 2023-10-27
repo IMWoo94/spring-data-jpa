@@ -290,4 +290,31 @@ class MemberRepositoryTest {
 
 	}
 
+	@Test
+	void bulkUpdate() {
+
+		// given
+		memberRepository.save(new Member("member1", 10));
+		memberRepository.save(new Member("member2", 19));
+		memberRepository.save(new Member("member3", 20));
+		memberRepository.save(new Member("member4", 21));
+		memberRepository.save(new Member("member5", 40));
+
+		// when
+		int i = memberRepository.bulkAgePlus(20);
+
+		List<Member> byUsername = memberRepository.findByUsername("member5");
+		Member member = byUsername.get(0);
+
+		System.out.println("member = " + member);
+		// then
+		assertThat(member.getAge()).isEqualTo(40);
+		assertThat(i).isEqualTo(3);
+
+		// 벌크 연산은 영속성 컨텍스트를 무시하고 DB에 바로 접근한다.
+		// 따라서 영속성에 있는 엔티티와 값이 불일치하는 경우가 발생할 수 있느니
+		// 벌크 연산은 맨 처음 사용하거나 사용 후 동기화 처리를 하자.
+
+	}
+
 }
