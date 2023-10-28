@@ -317,4 +317,32 @@ class MemberRepositoryTest {
 
 	}
 
+	@Test
+	void findMemberLazy() {
+
+		// given
+		Team teamA = new Team("teamA");
+		Team teamB = new Team("teamB");
+		teamRepository.save(teamA);
+		teamRepository.save(teamB);
+
+		Member member1 = new Member("member1", 10, teamA);
+		Member member2 = new Member("member1", 10, teamB);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		em.flush();
+		em.clear();
+		// 영속성 컨텍스트 반영 후 클리어 ~ 비어있는상태
+
+		// when
+		List<Member> members = memberRepository.findGraphByUsername("member1");
+		for (Member member : members) {
+			System.out.println("member = " + member);
+			System.out.println("member.getTeam().getClass() = " + member.getTeam().getClass());
+			System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+		}
+
+	}
+
 }
