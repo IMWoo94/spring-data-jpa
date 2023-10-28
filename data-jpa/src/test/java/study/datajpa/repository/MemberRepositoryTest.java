@@ -345,4 +345,51 @@ class MemberRepositoryTest {
 
 	}
 
+	@Test
+	void queryHint() {
+		Team teamA = new Team("teamA");
+		Team teamB = new Team("teamB");
+		teamRepository.save(teamA);
+		teamRepository.save(teamB);
+
+		Member member1 = new Member("member1", 10, teamA);
+		Member member2 = new Member("member1", 10, teamB);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		em.flush();
+		em.clear();
+		// Member findMember = memberRepository.findById(member1.getId()).get();
+		// findMember.setUsername("member3");
+		System.out.println("==========start==============");
+
+		List<Member> members = memberRepository.findQueryHintByUsername("member1");
+		System.out.println("===========findQueryHintByUsername start=============");
+		// for (Member member : members) {
+		// 	member.setUsername("member2");
+		// }
+
+		// System.out.println("========================");
+		// List<Member> members2 = memberRepository.findQueryHintByUsername("member1");
+		// System.out.println("========================");
+		em.find(Member.class, member1.getId());
+		System.out.println("========================");
+		em.flush();
+
+	}
+
+	@Test
+	void LockTest() {
+
+		Member member1 = new Member("member1", 10);
+		Member member2 = new Member("member1", 10);
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+		em.flush();
+		em.clear();
+
+		List<Member> findMembers = memberRepository.findLockByUsername("member1");
+
+	}
+
 }
