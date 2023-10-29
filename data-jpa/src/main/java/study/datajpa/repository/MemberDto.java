@@ -1,6 +1,7 @@
 package study.datajpa.repository;
 
 import lombok.Data;
+import study.datajpa.domain.Member;
 
 @Data
 public class MemberDto {
@@ -14,4 +15,11 @@ public class MemberDto {
 		this.username = username;
 		this.teamName = teamName;
 	}
+
+	public MemberDto(Member member) {
+		this.id = member.getId();
+		this.username = member.getUsername();
+		this.teamName = null;
+	}
+
 }
