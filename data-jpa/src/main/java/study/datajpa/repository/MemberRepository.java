@@ -20,7 +20,7 @@ import org.springframework.data.repository.query.Param;
 import study.datajpa.domain.Address;
 import study.datajpa.domain.Member;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
 	// @Query 어노테이션은 생략 가능하다.
 	// 생략 시 메소드명과 동일한 네임드쿼리가 있는지 확인하고 있으면 쓰고 없으면 그때 메소드 이름을 생성하여 사용된다.
