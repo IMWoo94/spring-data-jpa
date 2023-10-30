@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,8 @@ import org.springframework.data.repository.query.Param;
 import study.datajpa.domain.Address;
 import study.datajpa.domain.Member;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom,
+	JpaSpecificationExecutor<Member> {
 
 	// @Query 어노테이션은 생략 가능하다.
 	// 생략 시 메소드명과 동일한 네임드쿼리가 있는지 확인하고 있으면 쓰고 없으면 그때 메소드 이름을 생성하여 사용된다.
